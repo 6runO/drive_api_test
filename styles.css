@@ -9,9 +9,22 @@
 #dropbox h2{
   opacity: 0.4;
   margin-top: 0;
+  text-align: center;
+}
+
+#dropbox h3 {
+  text-align: center;
+  background-image: linear-gradient(to left, violet, indigo, blue, green, yellow, orange, red);
+  -webkit-background-clip: text;
+  color: transparent;
 }
 
 .obj {
   height: 250px;
   width: 100%;
+}
+
+.action-box {
+  display: flex;
+  justify-content: space-between;
 }

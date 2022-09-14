@@ -13,10 +13,16 @@
 
   <div id="dropbox">
     <h2>Arraste e Solte</h2>
-    <label for="file">Escolha o arquivo a ser anexado:</label>
-    <div><input type="file" id="file" name="file" accept="image/*,.pdf"></div>
+
+    <div class="action-box">
+      <div>
+        <label for="file">Ou escolha o arquivo a ser anexado:</label>
+        <div><input type="file" id="file" name="file" accept="image/*,.pdf"></div>
+      </div>
+      <button id="enviar">Enviar</button>
+    </div>
+
     <hr>
-    <button id="enviar">Enviar</button>
 
     <div id="upload-msg"></div>
 
@@ -59,26 +65,7 @@
     }
 
     function handleDroppedFiles(fileList) {
-      file = fileList[0]
-
-      if (fileList.length === 0) {
-        uploadMessage.innerHTML = "<p>Por favor, insira um arquivo a ser anexado.</p>";
-      } else if (file.size > 10485760) {
-        uploadMessage.innerHTML = "<p>O arquivo selecionado é maior do que o limite permitido (10 MB).</p>";
-      } else if (file.type !== "application/pdf" && !file.type.startsWith('image/')) {
-        uploadMessage.innerHTML = "<p>Apenas são aceitos arquivos no formato PDF.</p>";
-      } else {
-        // códigos do drive api
-        uploadMessage.innerHTML = "<p> Tamanho do arquivo: " + file.size + " bytes</p><p> Nome: " + file.name + "</p>";
-      }
-    }
-
-    //*** Send file ***//
-    enviarButton.addEventListener("click", handleFiles, false);
-
-    function handleFiles(e) {
-      e.preventDefault(); // prevent navigation to "#"
-      fileList = fileElement.files
+      fileElement.files = fileList
       file = fileList[0]
 
       if (fileList.length === 0) {
@@ -101,6 +88,44 @@
         reader.onload = (e) => { img.src = e.target.result; };
         reader.readAsDataURL(file);
       }
+    }
+
+    //*** Select file ***//
+    fileElement.addEventListener("change", handleFiles)
+
+    function handleFiles(e) {
+      e.preventDefault(); // prevent navigation to "#"
+      fileList = fileElement.files
+      file = fileList[0]
+
+      if (fileList.length === 0) {
+        uploadMessage.innerHTML = "<p>Por favor, insira um arquivo a ser anexado.</p>";
+      } else if (file.size > 10485760) {
+        uploadMessage.innerHTML = "<p>O arquivo selecionado é maior do que o limite permitido (10 MB).</p>";
+      } else if (file.type !== "application/pdf" && !file.type.startsWith('image/')) {
+        uploadMessage.innerHTML = "<p>Apenas são aceitos arquivos no formato PDF.</p>";
+      } else {
+        uploadMessage.innerHTML = "<p> Tamanho do arquivo: " + file.size + " bytes</p><p> Nome: " + file.name + "</p>";
+
+        const img = document.createElement("iframe");
+        img.classList.add("obj");
+        img.file = file;
+        preview.innerHTML = '';
+        preview.appendChild(img);
+
+        const reader = new FileReader();
+        reader.onload = (e) => { img.src = e.target.result; };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    //*** Send file ***//
+    enviarButton.addEventListener("click", sendFiles, false);
+
+    function sendFiles(e) {
+      // códigos do drive api
+      uploadMessage.innerHTML = "<h3>Do the magic!</h3>"
+
     }
   </script>
 </body>
